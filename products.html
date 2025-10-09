@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - SoftStep</title>
+    <link rel="stylesheet" href="products.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>Our Products</h1>
+        <div class="header-controls">
+            <div id="cart-icon" class="cart-icon">
+                <i class="fas fa-shopping-basket"></i>
+                <span id="cart-count" class="cart-count">0</span>
+            </div>
+            <a href="index.html" class="back-button">← Back to Home</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="filter-container">
+             <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="sale-search-input" placeholder="Search for products...">
+            </div>
+        </div>
+        <div id="product-grid" class="product-grid"></div>
+    </main>
+    
+    <script src="data.js"></script>
+    <script src="products.js"></script>
+
+    <div id="cartModal" class="modal-container">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Shopping Cart</h2>
+            <div id="cart-items-container"></div>
+            <button id="send-order-btn" class="send-order-btn">Send Order to Admin</button>
+        </div>
+    </div>
+</body>
+</html>

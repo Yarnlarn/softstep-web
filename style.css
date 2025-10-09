@@ -1,0 +1,167 @@
+/* --- Layout & Typography --- */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #fdfae0; /* สีพื้นหลังไข่ */
+    color: #333;
+    text-align: center;
+}
+
+.main-container {
+    padding: 20px;
+}
+
+header h1 {
+    color: #e74c3c; /* สีแดงสำหรับหัวข้อ SoftStep */
+    font-size: 4em;
+    margin-bottom: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+header p {
+    font-size: 1.2em;
+    color: #555;
+    margin-top: 5px;
+}
+
+/* --- Navigation Buttons (แก้ไขแล้ว) --- */
+.navigation-buttons {
+    margin-top: 40px;
+    display: flex;
+    gap: 25px; /* ระยะห่างระหว่างปุ่ม */
+    justify-content: center;
+}
+
+.nav-button {
+    background-color: #3498db;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1.5em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none; /* เอาเส้นใต้ลิงก์ออก */
+    border: none;
+}
+
+.nav-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Background Animation Styles --- */
+#background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.sock {
+    position: absolute;
+    top: -80px;
+    width: 40px;
+    user-select: none;
+    animation-name: fall;
+    animation-timing-function: ease-in;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+.sock img {
+    width: 100%;
+    display: block;
+}
+
+@keyframes fall {
+    from { transform: translateY(0vh) rotateZ(-20deg); }
+    to { transform: translateY(110vh) rotateZ(20deg); }
+}
+
+/* --- Admin Login Modal Styles (ส่วนที่เพิ่มเข้ามา) --- */
+.modal-container {
+    display: none; /* ซ่อนเป็นค่าเริ่มต้น */
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+.modal-container.show {
+    display: flex;
+}
+.modal-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.modal-content {
+    position: relative;
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1001;
+    width: 90%;
+    max-width: 400px;
+    animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.close-button:hover {
+    color: #333;
+}
+.login-form label {
+    display: block;
+    margin-bottom: 5px;
+    text-align: left;
+    font-weight: bold;
+}
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+.login-form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders - Admin</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div class="sidebar collapsed" id="sidebar">
+        <h2><i class="fas fa-cogs"></i> <span>Admin Panel</span></h2>
+        <nav>
+            <a href="manage-products.html"><i class="fas fa-box-open"></i> <span>Product Management</span></a>
+            <a href="orders.html" class="active menu-orders"><i class="fas fa-receipt"></i> <span>Orders</span></a>
+            <a href="index.html"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+        </nav>
+    </div>
+
+    <div class="content-wrapper full-width" id="content-wrapper">
+        <div class="main-content">
+            <button id="sidebar-toggle" class="sidebar-toggle"><i class="fas fa-chevron-left"></i></button>
+            <header>
+                <h1>Order Management</h1>
+            </header>
+            
+            <div class="content-area">
+                <div class="order-section">
+                    <h2><i class="fas fa-hourglass-half"></i> New Orders</h2>
+                    <div id="new-orders-list" class="order-list">
+                        </div>
+                </div>
+
+                <div class="order-section">
+                    <h2><i class="fas fa-history"></i> Order History</h2>
+                    <div id="order-history-list" class="order-list">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="image-modal-container" id="imageModal">
+        <div class="image-modal-overlay"></div>
+        <div class="image-modal-content">
+            <span class="image-modal-close-button">&times;</span>
+            <img src="" alt="Full-size Product Image" id="fullSizeImage">
+        </div>
+    </div>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="orders.js"></script> 
+</body>
+</html>

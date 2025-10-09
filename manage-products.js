@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function updateOrderBadge() {
         try {
-            const response = await fetch('http://localhost:3000/api/orders/pending-count');
+            const response = await fetch('https://softstep-backend.onrender.co/api/orders/pending-count');
             if (!response.ok) return;
             const data = await response.json();
             if (orderBadge) {
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadProducts() {
         try {
-            const response = await fetch('http://localhost:3000/api/products');
+            const response = await fetch('https://softstep-backend.onrender.co/api/products');
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             products = await response.json();
             applyFiltersAndDisplay();
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('productStock').value = product.stock;
         
         if (product.image) {
-            imagePreview.src = product.image.startsWith('blob:') ? product.image : `http://localhost:3000/${product.image}`;
+            imagePreview.src = product.image.startsWith('blob:') ? product.image : `https://softstep-backend.onrender.co/${product.image}`;
             imagePreview.classList.add('show');
         } else {
             imagePreview.classList.remove('show');
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.dataset.productId = product.id;
             const stockClass = product.stock < 10 ? 'low-stock' : '';
             const isChecked = product.isActive ? 'checked' : '';
-            const imageUrl = product.image.startsWith('blob:') ? product.image : `http://localhost:3000/${product.image}`;
+            const imageUrl = product.image.startsWith('blob:') ? product.image : `https://softstep-backend.onrender.co/${product.image}`;
 
             card.innerHTML = `
                 <div class="card-image-container">
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 event.preventDefault(); event.stopPropagation();
                 if (confirm(`Are you sure you want to delete product ID: ${productId}?`)) {
                     try {
-                        const response = await fetch(`http://localhost:3000/api/products/${productId}`, { method: 'DELETE' });
+                        const response = await fetch(`https://softstep-backend.onrender.co/api/products/${productId}`, { method: 'DELETE' });
                         if (!response.ok) throw new Error('Failed to delete product.');
                         await loadProducts();
                     } catch (error) {
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             toggle.addEventListener('change', async (event) => {
                 const newStatus = event.target.checked;
                 try {
-                    const response = await fetch(`http://localhost:3000/api/products/${productId}/status`, {
+                    const response = await fetch(`https://softstep-backend.onrender.co/api/products/${productId}/status`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ isActive: newStatus }),
@@ -167,9 +167,9 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('stock', document.getElementById('productStock').value);
         if (productImageInput.files.length > 0) formData.append('productImage', productImageInput.files[0]);
         try {
-            let response; let url = 'http://localhost:3000/api/products'; let method = 'POST';
+            let response; let url = 'https://softstep-backend.onrender.co/api/products'; let method = 'POST';
             if (currentEditId) {
-                url = `http://localhost:3000/api/products/${currentEditId}`; method = 'PUT';
+                url = `https://softstep-backend.onrender.co/api/products/${currentEditId}`; method = 'PUT';
             }
             response = await fetch(url, { method: method, body: formData });
             if (!response.ok) {
@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateOrderBadge();
 
     // --- VVV ส่วนที่แก้ไข: เปลี่ยนมาใช้ Socket.IO VVV ---
-    const socket = io("http://localhost:3000");
+    const socket = io("https://softstep-backend.onrender.com");
 
     socket.on("new_order_notification", (data) => {
         console.log("Real-time notification received!", data);

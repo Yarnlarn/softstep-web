@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadProducts() {
         try {
-            const response = await fetch('http://localhost:3000/api/products');
+            const response = await fetch('https://softstep-backend.onrender.co/api/products');
             if (!response.ok) throw new Error('Could not fetch products');
             products = await response.json();
             applyFiltersAndDisplay();
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'product-card';
             card.innerHTML = `
                 <div class="card-image-container">
-                    <img src="http://localhost:3000/${product.image}" alt="${product.name}">
+                    <img src="https://softstep-backend.onrender.co/${product.image}" alt="${product.name}">
                     ${product.stock <= 0 ? '<div class="out-of-stock-overlay"><span>สินค้าหมด</span></div>' : ''}
                 </div>
                 <div class="card-info">
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (productInfo) {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'cart-item';
-                itemElement.innerHTML = `<img src="http://localhost:3000/${productInfo.image}" alt="${productInfo.name}"><div class="cart-item-info"><h4>${productInfo.name}</h4><p>Qty: ${item.quantity} | Price: ${item.price.toFixed(2)}</p></div>`;
+                itemElement.innerHTML = `<img src="https://softstep-backend.onrender.co/${productInfo.image}" alt="${productInfo.name}"><div class="cart-item-info"><h4>${productInfo.name}</h4><p>Qty: ${item.quantity} | Price: ${item.price.toFixed(2)}</p></div>`;
                 cartItemsContainer.appendChild(itemElement);
             }
         });
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:3000/api/orders', {
+            const response = await fetch('https://softstep-backend.onrender.co/api/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cart),

@@ -21,8 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // --- จุดที่แก้ไข ---
             // เปลี่ยนให้ดึงรูปภาพจาก Backend Server
-            sockImage.src = `https://softstep-backend.onrender.co/${randomImage}`;
-
+            sockImage.src = `/${randomImage}`;https://softstep-web.onrender.com
             sockContainer.style.left = (Math.random() * 100) + 'vw';
             sockContainer.style.width = (Math.random() * 30 + 25) + 'px';
             sockContainer.style.animationDuration = (Math.random() * 8 + 5) + 's';

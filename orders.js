@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadInitialData() {
         try {
             const [ordersResponse, productsResponse] = await Promise.all([
-                fetch('https://softstep-backend.onrender.co/api/orders'),
-                fetch('https://softstep-backend.onrender.co/api/products')
+                fetch('https://softstep-web.onrender.com/api/orders'),
+                fetch('https://softstep-web.onrender.com/api/products')
             ]);
             if (!ordersResponse.ok || !productsResponse.ok) throw new Error('Could not fetch initial data');
             const orders = await ordersResponse.json();
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             order.items.forEach(item => {
                 const productInfo = allProducts.find(p => p.id === item.id);
                 if (productInfo) {
-                    const imageUrl = `https://softstep-backend.onrender.co/${productInfo.image}`;
+                    const imageUrl = `https://softstep-web.onrender.com/${productInfo.image}`;
                     itemsHtml += `
                         <div class="order-item">
                             <img src="${imageUrl}" alt="${productInfo.name}" class="order-item-image" data-full-image="${imageUrl}">
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const orderId = newButton.dataset.orderId;
                 if (confirm(`Confirm order ${orderId}?`)) {
                     try {
-                        const response = await fetch(`https://softstep-backend.onrender.co/api/orders/${orderId}/confirm`, { method: 'PATCH' });
+                        const response = await fetch(`https://softstep-web.onrender.com/api/orders/${orderId}/confirm`, { method: 'PATCH' });
                         if (!response.ok) throw new Error('Failed to confirm order.');
                         await loadInitialData(); 
                     } catch (error) {
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadInitialData();
     
     // --- VVV ส่วนที่แก้ไข: เปลี่ยนมาใช้ Socket.IO VVV ---
-    const socket = io("https://softstep-backend.onrender.co");
+    const socket = io("https://softstep-web.onrender.com");
 
     let previousOrderCount = 0; // ย้ายตัวแปรมาไว้ที่นี่
     socket.on("new_order_notification", (data) => {

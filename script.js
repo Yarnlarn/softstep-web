@@ -19,9 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const sockImage = document.createElement('img');
             const randomImage = sockImages[Math.floor(Math.random() * sockImages.length)];
             
-            // --- จุดที่แก้ไข ---
-            // เปลี่ยนให้ดึงรูปภาพจาก Backend Server
-            sockImage.src =`https://softstep-web.onrender.com/${randomImage}`;
+            // !!! กรุณาเปลี่ยน 'https://softstep-backend.onrender.com' ให้เป็น URL จริงของ Backend บน Render ของคุณ
+            sockImage.src = `https://softstep-backend.onrender.com/${randomImage}`;
+
             sockContainer.style.left = (Math.random() * 100) + 'vw';
             sockContainer.style.width = (Math.random() * 30 + 25) + 'px';
             sockContainer.style.animationDuration = (Math.random() * 8 + 5) + 's';
@@ -33,49 +33,68 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ===================================
-    // ส่วนที่ 2: การควบคุม Modal Login ของ Admin
+    // ส่วนที่ 2: การควบคุม Modal Login
     // ===================================
 
-    const adminButton = document.getElementById('adminBtn');
-    const adminModal = document.getElementById('adminModal');
+    const warehouseButton = document.getElementById('warehouseBtn'); // <-- แก้ไข: เลือก ID ของปุ่มให้ถูกต้อง
+    const adminButton = document.getElementById('adminBtn');         // <-- แก้ไข: เลือกปุ่ม Admin
+    const loginModal = document.getElementById('loginModal');        // <-- แก้ไข: id ของ Modal
     
-    if (adminButton && adminModal) {
-        const closeModalButton = adminModal.querySelector('.close-button');
-        const modalOverlay = adminModal.querySelector('.modal-overlay');
-        const loginForm = adminModal.querySelector('.login-form');
-        const usernameInput = adminModal.querySelector('#username');
-        const passwordInput = adminModal.querySelector('#password');
+    if (loginModal) {
+        const closeModalButton = loginModal.querySelector('.close-button');
+        const modalOverlay = loginModal.querySelector('.modal-overlay');
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = loginModal.querySelector('#username');
+        const passwordInput = loginModal.querySelector('#password');
+        
+        let loginTargetUrl = ''; // ตัวแปรสำหรับเก็บ URL ปลายทาง
 
-        const openModal = (event) => {
-            event.preventDefault(); // ป้องกันไม่ให้ลิงก์ '#' ทำให้หน้ากระโดด
-            adminModal.classList.add('show');
+        // ฟังก์ชันสำหรับเปิด Modal และกำหนดหน้าปลายทาง
+        const openModal = (event, targetUrl) => {
+            event.preventDefault();
+            loginTargetUrl = targetUrl; // จำไว้ว่าผู้ใช้ต้องการไปที่ไหน
+            loginModal.classList.add('show');
         };
 
         const closeModal = () => {
-            adminModal.classList.remove('show');
+            loginModal.classList.remove('show');
         };
 
-        const handleLogin = (event) => {
-            event.preventDefault(); // ป้องกันไม่ให้ฟอร์มรีเฟรชหน้าเว็บ
+        // ฟังก์ชันจัดการการล็อกอิน (เชื่อมต่อ Backend)
+        const handleLogin = async (event) => {
+            event.preventDefault();
+            const username = usernameInput.value;
+            const password = passwordInput.value;
 
-            const enteredUsername = usernameInput.value;
-            const enteredPassword = passwordInput.value;
+            try {
+                // !!! กรุณาเปลี่ยน URL ให้เป็นของ Backend บน Render ของคุณ
+                const response = await fetch('https://softstep-backend.onrender.com/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
 
-            // กำหนด Username และ Password ที่ถูกต้อง
-            const correctUsername = "admin";
-            const correctPassword = "1234";
-            
-            if (enteredUsername === correctUsername && enteredPassword === correctPassword) {
-                alert('Login Successful!');
-                // เมื่อล็อกอินสำเร็จ ให้ไปที่หน้าจัดการสินค้า
-                window.location.href = 'manage-products.html'; 
-            } else {
-                // เมื่อล็อกอินไม่สำเร็จ ให้แจ้งเตือน
-                alert('Username หรือ Password ไม่ถูกต้อง!');
+                if (response.ok) {
+                    alert('Login Successful!');
+                    window.location.href = loginTargetUrl; // ไปยังหน้าที่ผู้ใช้ต้องการ
+                } else {
+                    const errorData = await response.json();
+                    alert(`Login Failed: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('An error occurred during login.');
             }
         };
 
-        adminButton.addEventListener('click', openModal);
+        // --- ติดตั้ง Event Listeners ---
+        if (warehouseButton) {
+            warehouseButton.addEventListener('click', (event) => openModal(event, 'manage-products.html'));
+        }
+        if (adminButton) {
+            adminButton.addEventListener('click', (event) => openModal(event, 'users.html'));
+        }
+        
         closeModalButton.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', closeModal);
         loginForm.addEventListener('submit', handleLogin);

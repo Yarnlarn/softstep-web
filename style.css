@@ -6,7 +6,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #fdfae0; /* สีพื้นหลังไข่ */
+    background-color: #fdfae0; /* Eggshell background color */
     color: #333;
     text-align: center;
 }
@@ -16,7 +16,7 @@ body {
 }
 
 header h1 {
-    color: #e74c3c; /* สีแดงสำหรับหัวข้อ SoftStep */
+    color: #e74c3c; /* Red color for the heading */
     font-size: 4em;
     margin-bottom: 0;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
@@ -28,11 +28,11 @@ header p {
     margin-top: 5px;
 }
 
-/* --- Navigation Buttons (แก้ไขแล้ว) --- */
+/* --- Navigation Buttons --- */
 .navigation-buttons {
     margin-top: 40px;
     display: flex;
-    gap: 25px; /* ระยะห่างระหว่างปุ่ม */
+    gap: 25px;
     justify-content: center;
 }
 
@@ -48,7 +48,7 @@ header p {
     align-items: center;
     gap: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-decoration: none; /* เอาเส้นใต้ลิงก์ออก */
+    text-decoration: none;
     border: none;
 }
 
@@ -90,78 +90,113 @@ header p {
     to { transform: translateY(110vh) rotateZ(20deg); }
 }
 
-/* --- Admin Login Modal Styles (ส่วนที่เพิ่มเข้ามา) --- */
+/* --- Admin Login Modal Styles (Corrected & Final) --- */
 .modal-container {
-    display: none; /* ซ่อนเป็นค่าเริ่มต้น */
+    display: none; /* VERY IMPORTANT: Hides the modal by default */
     position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    left: 0; top: 0; width: 100%; height: 100%;
     z-index: 1000;
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(5px);
 }
+
 .modal-container.show {
-    display: flex;
+    display: flex; /* This class is added by JavaScript to show the modal */
 }
-.modal-overlay {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-}
+
 .modal-content {
     position: relative;
-    background-color: #ffffff;
-    padding: 30px 40px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     z-index: 1001;
     width: 90%;
     max-width: 400px;
-    animation: fadeIn 0.3s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideDown 0.5s ease-out forwards;
 }
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
+
+.modal-content h2 {
+    color: #ffffff;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
 .close-button {
     position: absolute;
-    top: 10px;
+    top: 15px;
     right: 15px;
     font-size: 28px;
-    font-weight: bold;
-    color: #aaa;
+    color: #7f8c8d;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: color 0.3s ease;
 }
+
 .close-button:hover {
-    color: #333;
+    color: #ffffff;
 }
-.login-form label {
-    display: block;
-    margin-bottom: 5px;
-    text-align: left;
-    font-weight: bold;
+
+.form-group {
+    position: relative;
+    margin-bottom: 25px;
 }
-.login-form input {
+
+.form-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7f8c8d;
+}
+
+#login-form input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 12px 15px 12px 45px;
+    background-color: #3b5063;
+    border: 1px solid #566a7d;
+    border-radius: 8px;
+    color: #ecf0f1;
+    font-size: 1em;
     box-sizing: border-box;
+    transition: all 0.3s ease;
 }
-.login-form button {
+
+#login-form input::placeholder {
+    color: #7f8c8d;
+}
+
+#login-form input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+}
+
+#login-form .action-button {
     width: 100%;
-    padding: 12px;
-    background-color: #27ae60;
+    padding: 15px;
+    background: linear-gradient(45deg, #3498db, #2980b9);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 1.1em;
+    font-weight: bold;
     cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#login-form .action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
 }

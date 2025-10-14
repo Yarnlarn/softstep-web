@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Admin</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div class="sidebar collapsed" id="sidebar">
+        <h2><i class="fas fa-cogs"></i> <span>Admin Panel</span></h2>
+        <nav>
+            <a href="manage-products.html"><i class="fas fa-warehouse"></i> <span>Warehouse</span></a>
+            <a href="orders.html" class="menu-orders"><i class="fas fa-receipt"></i> <span>Orders</span><span class="notification-badge hidden" id="order-badge">0</span></a>
+            <a href="users.html" class="active"><i class="fas fa-user-cog"></i> <span>User Management</span></a>
+            <a href="index.html"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+        </nav>
+    </div>
+
+    <div class="content-wrapper full-width" id="content-wrapper">
+        <div class="main-content">
+            <button id="sidebar-toggle" class="sidebar-toggle"><i class="fas fa-chevron-left"></i></button>
+            <header>
+                <h1>User Management</h1>
+            </header>
+            
+            <div class="content-area">
+                <div class="user-management-grid">
+                    <div class="form-container">
+                        <h3>Add New User</h3>
+                        <form id="add-user-form">
+                            <div class="form-group">
+                                <label for="new-username">Username</label>
+                                <input type="text" id="new-username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">Password</label>
+                                <input type="password" id="new-password" required>
+                            </div>
+                            <button type="submit" class="action-button primary">Add User</button>
+                        </form>
+                    </div>
+                    <div class="table-container">
+                        <h3>Existing Users</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-list-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://softstep-backend.onrender.com/socket.io/socket.io.js"></script>
+    <script src="users.js"></script> 
+</body>
+</html>

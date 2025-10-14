@@ -20,7 +20,18 @@ db.serialize(() => {
         items TEXT,
         status TEXT
     )`);
+    
+    // สร้างตาราง users (ส่วนที่สำคัญ)
+    db.run(`CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE,
+        password TEXT
+    )`);
 });
 
-db.close();
-console.log('Database tables created successfully.');
+db.close((err) => {
+    if (err) {
+        return console.error(err.message);
+    }
+    console.log('Database tables verified/created successfully.');
+});

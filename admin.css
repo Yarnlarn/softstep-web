@@ -729,3 +729,31 @@ body {
     top: 5px;
     right: 5px;
 }
+/* --- User Management Page Styles --- */
+.user-management-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* แบ่ง 2 คอลัมน์ */
+    gap: 30px;
+    align-items: start;
+}
+
+.form-container, .table-container {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container th, .table-container td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+.table-container thead th {
+    background-color: #f4f6f8;
+}

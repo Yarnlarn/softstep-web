@@ -729,10 +729,10 @@ body {
     top: 5px;
     right: 5px;
 }
-/* --- User Management Page Styles --- */
+ /* --- User Management Page Styles --- */
 .user-management-grid {
     display: grid;
-    grid-template-columns: 1fr 2fr; /* แบ่ง 2 คอลัมน์ */
+    grid-template-columns: 1fr 2fr; /* 2 columns: form | table */
     gap: 30px;
     align-items: start;
 }

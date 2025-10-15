@@ -9,50 +9,35 @@ const saltRounds = 10;
 const http = require('http');
 const { Server } = require("socket.io");
 
+// --- Database Connection ---
 const db = new sqlite3.Database('./database.db', (err) => {
-    if (err) {
-        console.error(err.message);
-    } else {
+    if (err) console.error(err.message);
+    else {
         console.log('Connected to the SQLite database.');
-        // --- VVV เพิ่มส่วนนี้: สร้าง Admin User เริ่มต้น VVV ---
         seedAdminUser();
     }
 });
 
-// --- VVV ฟังก์ชันใหม่สำหรับสร้าง Admin User เริ่มต้น VVV ---
 function seedAdminUser() {
     const defaultUsername = 'admin';
     const defaultPassword = 'password123';
+    const defaultRole = 'admin';
 
     db.get("SELECT * FROM users WHERE username = ?", [defaultUsername], (err, row) => {
-        if (err) {
-            console.error("Error checking for admin user:", err.message);
-            return;
-        }
-        // ถ้ายังไม่มี user 'admin' ในระบบ
         if (!row) {
             bcrypt.hash(defaultPassword, saltRounds, (err, hash) => {
-                if (err) {
-                    console.error("Error hashing password:", err);
-                    return;
-                }
-                db.run('INSERT INTO users (username, password) VALUES (?, ?)', [defaultUsername, hash], (err) => {
-                    if (err) {
-                        console.error("Error creating default admin user:", err.message);
-                    } else {
-                        console.log("Default admin user created successfully! (admin/password123)");
-                    }
+                db.run('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [defaultUsername, hash, defaultRole], (err) => {
+                    if (!err) console.log("Default admin user created!");
                 });
             });
         }
     });
 }
 
+// --- Server and Middleware Setup ---
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-    cors: { origin: "*", methods: ["GET", "POST", "PUT", "PATCH", "DELETE"] }
-});
+const io = new Server(server, { cors: { origin: "*" } });
 const port = 3000;
 
 app.use(cors());
@@ -192,7 +177,7 @@ app.post('/api/login', (req, res) => {
         if (!user) return res.status(401).json({ message: 'Incorrect username or password' });
         bcrypt.compare(password, user.password, (err, result) => {
             if (result) {
-                res.status(200).json({ message: 'Login successful' });
+                res.status(200).json({ message: 'Login successful', role: user.role });
             } else {
                 res.status(401).json({ message: 'Incorrect username or password' });
             }
@@ -200,19 +185,22 @@ app.post('/api/login', (req, res) => {
     });
 });
 app.get('/api/users', (req, res) => {
-    db.all("SELECT id, username FROM users", [], (err, rows) => {
+    db.all("SELECT id, username, role FROM users", [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(rows);
     });
 });
 app.post('/api/users', (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
     bcrypt.hash(password, saltRounds, (err, hash) => {
         if (err) return res.status(500).json({ error: 'Error hashing password' });
-        const sql = `INSERT INTO users (username, password) VALUES (?, ?)`;
-        db.run(sql, [username, hash], function(err) {
-            if (err) return res.status(400).json({ message: 'Username already exists' });
-            res.status(201).json({ id: this.lastID, username });
+        const sql = `INSERT INTO users (username, password, role) VALUES (?, ?, ?)`;
+        db.run(sql, [username, hash, role], function(err) {
+            if (err) {
+                if(err.code === 'SQLITE_CONSTRAINT') return res.status(400).json({ message: 'Username already exists' });
+                return res.status(500).json({ message: err.message });
+            }
+            res.status(201).json({ id: this.lastID, username, role });
         });
     });
 });
@@ -224,6 +212,32 @@ app.delete('/api/users/:id', (req, res) => {
     });
 });
 
+// --- VVV API ใหม่: PATCH - อัปเดตผู้ใช้ (รหัสผ่าน/Role) VVV ---
+app.patch('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const { password, role } = req.body;
+
+    // ถ้ามีการส่งรหัสผ่านใหม่มา ให้เข้ารหัสก่อน
+    if (password) {
+        bcrypt.hash(password, saltRounds, (err, hash) => {
+            if (err) return res.status(500).json({ error: 'Error hashing password' });
+            
+            db.run("UPDATE users SET password = ?, role = ? WHERE id = ?", [hash, role, id], function(err) {
+                if (err) return res.status(500).json({ error: err.message });
+                if (this.changes === 0) return res.status(404).json({ message: 'User not found' });
+                res.status(200).json({ message: 'User updated successfully' });
+            });
+        });
+    } else { // ถ้าไม่มีรหัสผ่านใหม่ ให้อัปเดตแค่ Role
+        db.run("UPDATE users SET role = ? WHERE id = ?", [role, id], function(err) {
+            if (err) return res.status(500).json({ error: err.message });
+            if (this.changes === 0) return res.status(404).json({ message: 'User not found' });
+            res.status(200).json({ message: 'User role updated successfully' });
+        });
+    }
+});
+
+// --- Start Server ---
 server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });

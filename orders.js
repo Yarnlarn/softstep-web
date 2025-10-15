@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-
+    // --- VVV เพิ่ม "ยามเฝ้าประตู" VVV ---
+    const userRole = sessionStorage.getItem('userRole');
+    if (userRole !== 'admin' && userRole !== 'warehouse') {
+        alert('Access Denied! Please log in.');
+        window.location.href = 'index.html';
+        return; // หยุดการทำงานของโค้ดที่เหลือทันที
+    }
     // --- 1. Collapsible Sidebar Logic ---
     const sidebar = document.getElementById('sidebar');
     const contentWrapper = document.getElementById('content-wrapper');

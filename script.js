@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ส่วนที่ 2: การควบคุม Modal Login
     // ===================================
 
-    const warehouseButton = document.getElementById('warehouseBtn'); // <-- แก้ไข: เลือก ID ของปุ่มให้ถูกต้อง
-    const adminButton = document.getElementById('adminBtn');         // <-- แก้ไข: เลือกปุ่ม Admin
-    const loginModal = document.getElementById('loginModal');        // <-- แก้ไข: id ของ Modal
+    const warehouseButton = document.getElementById('warehouseBtn');
+    const adminButton = document.getElementById('adminBtn');
+    const loginModal = document.getElementById('loginModal');
     
     if (loginModal) {
         const closeModalButton = loginModal.querySelector('.close-button');
@@ -47,12 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const usernameInput = loginModal.querySelector('#username');
         const passwordInput = loginModal.querySelector('#password');
         
-        let loginTargetUrl = ''; // ตัวแปรสำหรับเก็บ URL ปลายทาง
+        // --- ส่วนที่แก้ไข ---
+        // เราจะไม่ใช้ตัวแปรกลาง แต่จะให้ handleLogin ตัดสินใจเอง
+        // let loginTargetUrl = ''; 
 
-        // ฟังก์ชันสำหรับเปิด Modal และกำหนดหน้าปลายทาง
-        const openModal = (event, targetUrl) => {
+        const openModal = (event) => {
             event.preventDefault();
-            loginTargetUrl = targetUrl; // จำไว้ว่าผู้ใช้ต้องการไปที่ไหน
             loginModal.classList.add('show');
         };
 
@@ -60,7 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
             loginModal.classList.remove('show');
         };
 
-        // ฟังก์ชันจัดการการล็อกอิน (เชื่อมต่อ Backend)
+        // --- ส่วนที่แก้ไข ---
+        // ฟังก์ชันจัดการการล็อกอินที่สมบูรณ์
         const handleLogin = async (event) => {
             event.preventDefault();
             const username = usernameInput.value;
@@ -75,8 +76,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
+                    const data = await response.json(); // ดึงข้อมูล role ที่ส่งกลับมา
+                    
+                    // "จำ" สิทธิ์ของผู้ใช้ไว้ใน sessionStorage ของเบราว์เซอร์
+                    sessionStorage.setItem('userRole', data.role);
+                    
                     alert('Login Successful!');
-                    window.location.href = loginTargetUrl; // ไปยังหน้าที่ผู้ใช้ต้องการ
+
+                    // ตรวจสอบ role แล้วส่งไปหน้าที่ถูกต้อง
+                    if (data.role === 'admin') {
+                        window.location.href = 'users.html';
+                    } else if (data.role === 'warehouse') {
+                        window.location.href = 'manage-products.html';
+                    } else {
+                        alert('Unknown user role! Cannot redirect.');
+                    }
                 } else {
                     const errorData = await response.json();
                     alert(`Login Failed: ${errorData.message}`);
@@ -87,12 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // --- ติดตั้ง Event Listeners ---
+        // --- ส่วนที่แก้ไข ---
+        // ทั้งสองปุ่มจะเรียกใช้ openModal แบบธรรมดาเหมือนกัน
         if (warehouseButton) {
-            warehouseButton.addEventListener('click', (event) => openModal(event, 'manage-products.html'));
+            warehouseButton.addEventListener('click', openModal);
         }
         if (adminButton) {
-            adminButton.addEventListener('click', (event) => openModal(event, 'users.html'));
+            adminButton.addEventListener('click', openModal);
         }
         
         closeModalButton.addEventListener('click', closeModal);

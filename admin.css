@@ -6,12 +6,11 @@ body {
     display: block; /* Changed for collapsible sidebar */
 }
 
-/* --- Sidebar & Collapsible Logic --- */
 .sidebar {
     width: 250px;
     background-color: #2c3e50;
     color: white;
-    min-height: 100vh;
+    height: 100vh; /* <-- แก้ไข: กำหนดความสูงให้พอดีกับหน้าจอ */
     padding: 20px;
     box-sizing: border-box;
     position: fixed;
@@ -19,6 +18,7 @@ body {
     left: 0;
     transition: width 0.4s ease;
     overflow-x: hidden;
+    overflow-y: auto; /* <-- เพิ่ม: ถ้าเนื้อหาแนวตั้งยาวเกิน ให้มี scrollbar */
 }
 
 .sidebar h2 {

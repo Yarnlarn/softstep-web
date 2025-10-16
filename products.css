@@ -71,3 +71,50 @@ body{font-family:Arial,sans-serif;background-color:#f4f6f8;margin:0;padding:0;co
         padding: 10px;
     }
 }
+/* --- Responsive Styles for Sale Page --- */
+@media (max-width: 768px) {
+    /* ปรับ padding ของเนื้อหาหลัก */
+    main {
+        padding: 15px;
+    }
+
+    /* ทำให้ช่องค้นหาเต็มความกว้าง */
+    .search-bar {
+        width: 100%;
+        box-sizing: border-box; /* ป้องกัน padding ดันเกินขอบ */
+    }
+
+    /* ปรับ Grid แสดงผลสินค้าสำหรับจอเล็ก */
+    .product-grid {
+        /* ลดขนาดขั้นต่ำของการ์ด เพื่อให้แสดงได้ 2 ชิ้นต่อแถว */
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px; /* ลดระยะห่างระหว่างการ์ด */
+    }
+
+    /* ลดขนาดตัวอักษรในการ์ด */
+    .product-card .product-name {
+        font-size: 0.9em;
+        margin-bottom: 5px;
+    }
+
+    .product-card .product-id,
+    .product-card .product-stock {
+        font-size: 0.8em;
+    }
+
+    /* ปรับส่วนกรอกจำนวน/ราคาตอนกดขยายการ์ด */
+    .card-expanded-content .expanded-form-group {
+        flex-direction: column; /* เรียงในแนวตั้ง */
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .card-expanded-content .expanded-form-group label {
+        font-size: 0.9em;
+    }
+
+    .card-expanded-content .add-to-cart-btn {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+}

@@ -683,3 +683,20 @@ body {
     .card-details p { font-size: 0.8em; }
     .card-footer { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
+/* --- Responsive Fix for Collapsed Sidebar Icons on Mobile --- */
+@media (max-width: 768px) {
+    /* ปรับ padding ของลิงก์ใน sidebar ที่พับอยู่ */
+    .sidebar.collapsed nav a {
+        padding: 15px 0; /* เพิ่ม padding บน-ล่าง, ลบ ซ้าย-ขวา */
+    }
+
+    /* ลดขนาดไอคอนเมนู (Warehouse, Orders, etc.) */
+    .sidebar.collapsed nav a i {
+        font-size: 1.4em; /* ลดขนาดไอคอนให้เล็กลง */
+    }
+
+    /* ลดขนาดไอคอนหัวข้อหลัก (Admin Panel) */
+    .sidebar.collapsed h2 i {
+        font-size: 1.6em; /* ลดขนาดไอคอนให้เล็กลง */
+    }
+}

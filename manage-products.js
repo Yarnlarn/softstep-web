@@ -1,13 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- VVV เพิ่ม "ยามเฝ้าประตู" VVV ---
+
+    // --- 1. "ยามเฝ้าประตู" (Guard) ---
+    // ตรวจสอบสิทธิ์ผู้ใช้ก่อนเริ่มทำงาน
     const userRole = sessionStorage.getItem('userRole');
     if (userRole !== 'admin' && userRole !== 'warehouse') {
         alert('Access Denied! Please log in.');
         window.location.href = 'index.html';
         return; // หยุดการทำงานของโค้ดที่เหลือทันที
     }
-    let products = []; 
 
+    // --- 2. State Variables ---
+    let products = []; 
+    let currentEditId = null;
+    let previousOrderCount = 0;
+
+    // --- 3. เลือก Element ทั้งหมด ---
     const productGrid = document.getElementById('product-grid-admin');
     const addNewProductBtn = document.getElementById('add-new-product-btn');
     const productModal = document.getElementById('productModal');
@@ -20,7 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const contentWrapper = document.getElementById('content-wrapper');
     const sidebarToggleBtn = document.getElementById('sidebar-toggle');
     const orderBadge = document.getElementById('order-badge');
-
+    const logoutBtn = document.getElementById('logout-btn'); // <-- เลือกปุ่ม Logout
+    
     if (!productGrid || !addNewProductBtn || !productModal || !searchInput) {
         console.error('Essential elements are missing from the page!');
         return;
@@ -32,12 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const productImageInput = document.getElementById('productImage');
     const imagePreview = document.getElementById('imagePreview');
     
-    let currentEditId = null;
-
-    // --- ฟังก์ชันสำหรับอัปเดต Order Badge (จะถูกเรียกใช้แค่ตอนโหลดหน้า) ---
+    // --- 4. ฟังก์ชันหลัก (Data Loading, Displaying, etc.) ---
     async function updateOrderBadge() {
         try {
-            // !!! กรุณาเปลี่ยน URL ให้เป็นของ Backend บน Render ของคุณ
             const response = await fetch('https://softstep-backend.onrender.com/api/orders/pending-count');
             if (!response.ok) return;
             const data = await response.json();
@@ -58,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadProducts() {
         try {
-            // !!! กรุณาเปลี่ยน URL ให้เป็นของ Backend บน Render ของคุณ
             const response = await fetch('https://softstep-backend.onrender.com/api/products');
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             products = await response.json();
@@ -112,33 +116,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const stockClass = product.stock < 10 ? 'low-stock' : '';
             const isChecked = product.isActive ? 'checked' : '';
             const imageUrl = product.image.startsWith('blob:') ? product.image : `https://softstep-backend.onrender.com/${product.image}`;
-
-            // --- VVV ส่วนที่แก้ไข Syntax Error VVV ---
             card.innerHTML = `
                 <div class="card-image-container">
                     <img src="${imageUrl}" alt="${product.name}" onerror="this.style.display='none'">
                     ${product.stock <= 0 ? '<div class="out-of-stock-overlay"><span>สินค้าหมด</span></div>' : ''}
                 </div>
-                <div class="card-body">
-                    <h3>${product.name}</h3>
-                    <div class="card-details">
-                        <p>ID: <span>${product.id}</span></p>
-                        <p>Category: <span>${product.category}</span></p>
-                        <p>Stock: <span class="${stockClass}">${product.stock}</span></p>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="status-toggle">
-                        <label class="switch">
-                            <input type="checkbox" ${isChecked} data-product-id="${product.id}">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="action-icons">
-                        <a href="#" class="edit" title="Edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="delete" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                    </div>
-                </div>
+                <div class="card-body"><h3>${product.name}</h3><div class="card-details"><p>ID: <span>${product.id}</span></p><p>Category: <span>${product.category}</span></p><p>Stock: <span class="${stockClass}">${product.stock}</span></p></div></div>
+                <div class="card-footer"><div class="status-toggle"><label class="switch"><input type="checkbox" ${isChecked} data-product-id="${product.id}"><span class="slider"></span></label></div><div class="action-icons"><a href="#" class="edit" title="Edit"><i class="fas fa-edit"></i></a><a href="#" class="delete" title="Delete"><i class="fas fa-trash-alt"></i></a></div></div>
             `;
             productGrid.appendChild(card);
         });
@@ -238,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayAdminProducts(filteredProducts);
     }
     
+    // --- 5. ติดตั้ง Event Listeners ---
     addNewProductBtn.addEventListener('click', openModalForAdd);
     closeModalButton.addEventListener('click', closeModal);
     advancedFilterBtn.addEventListener('click', () => advancedFiltersContainer.classList.toggle('hidden'));
@@ -261,23 +246,29 @@ document.addEventListener('DOMContentLoaded', () => {
             contentWrapper.classList.toggle('full-width');
         });
     }
+
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            sessionStorage.removeItem('userRole');
+            alert('You have been logged out.');
+            window.location.href = 'index.html';
+        });
+    }
     
+    // --- 6. เริ่มการทำงาน ---
     loadProducts();
     updateOrderBadge(); // เรียกใช้ตอนโหลดหน้าครั้งแรก
-
-    // --- VVV ส่วนที่แก้ไข: เปลี่ยนมาใช้ Socket.IO VVV ---
+    
     const socket = io("https://softstep-backend.onrender.com"); // <-- แก้ไข URL ให้ถูกต้อง
-
-    let previousOrderCount = 0;
     socket.on("new_order_notification", (data) => {
         console.log("Real-time notification received!", data);
         if (orderBadge) {
-            // เล่นเสียงเฉพาะเมื่อจำนวนออเดอร์เพิ่มขึ้น
             if (data.count > previousOrderCount) {
                  const notificationSound = new Audio('../sounds/notification.mp3');
                  notificationSound.play().catch(e => console.error("Error playing sound:", e));
             }
-            previousOrderCount = data.count; // อัปเดตจำนวนล่าสุดเสมอ
+            previousOrderCount = data.count;
 
             if (data.count > 0) {
                 orderBadge.textContent = data.count;

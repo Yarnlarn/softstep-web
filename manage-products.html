@@ -12,13 +12,13 @@
     <div class="sidebar collapsed" id="sidebar">
         <h2><i class="fas fa-cogs"></i> <span>Admin Panel</span></h2>
         <nav>
-            <a href="manage-products.html" class="active"><i class="fas fa-box-open"></i> <span>Product Management</span></a>
+            <a href="manage-products.html" class="active"><i class="fas fa-warehouse"></i> <span>Warehouse</span></a>
             <a href="orders.html" class="menu-orders">
                 <i class="fas fa-receipt"></i> 
                 <span>Orders</span>
-                <span class="notification-badge" id="order-badge">0</span>
+                <span class="notification-badge hidden" id="order-badge">0</span>
             </a>
-            <a href="index.html"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+            <a href="index.html" id="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
         </nav>
     </div>
 
@@ -109,8 +109,8 @@
             </form>
         </div>
     </div>
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script src="data.js"></script>
+
+    <script src="https://softstep-backend.onrender.com/socket.io/socket.io.js"></script>
     <script src="manage-products.js"></script> 
 </body>
 </html>

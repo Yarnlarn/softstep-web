@@ -6,7 +6,7 @@ body {
     display: block; /* Changed for collapsible sidebar */
 }
 
-/* --- Sidebar Styles --- */
+/* --- Sidebar & Collapsible Logic --- */
 .sidebar {
     width: 250px;
     background-color: #2c3e50;
@@ -14,10 +14,11 @@ body {
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
-    position: fixed; /* Make sidebar fixed */
+    position: fixed;
     top: 0;
     left: 0;
     transition: width 0.4s ease;
+    overflow-x: hidden;
 }
 
 .sidebar h2 {
@@ -25,11 +26,11 @@ body {
     margin-bottom: 30px;
     border-bottom: 1px solid #34495e;
     padding-bottom: 20px;
-    white-space: nowrap; /* Prevent text wrapping */
+    white-space: nowrap;
 }
 
 .sidebar nav a {
-    display: flex; /* Use flex for alignment */
+    display: flex;
     align-items: center;
     color: #bdc3c7;
     text-decoration: none;
@@ -37,12 +38,12 @@ body {
     margin: 10px 0;
     border-radius: 5px;
     transition: background-color 0.3s, color 0.3s;
-    white-space: nowrap; /* Prevent text wrapping */
+    white-space: nowrap;
 }
 
 .sidebar nav a i {
     margin-right: 10px;
-    min-width: 20px; /* Ensure icon alignment */
+    min-width: 20px;
     text-align: center;
 }
 
@@ -51,7 +52,6 @@ body {
     color: white;
 }
 
-/* --- Main Content & Collapsible Logic --- */
 .content-wrapper {
     margin-left: 250px;
     transition: margin-left 0.4s ease;
@@ -101,6 +101,8 @@ body {
     transform: rotate(180deg);
 }
 
+
+/* --- Main Content Styles --- */
 .main-content {
     padding: 20px 40px;
 }
@@ -114,13 +116,13 @@ body {
     align-items: center;
 }
 
-/* --- Other Component Styles --- */
 .content-area {
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
 }
 
+/* --- Page Controls (Search, Filters) --- */
 .page-controls {
     display: flex;
     justify-content: space-between;
@@ -205,16 +207,8 @@ body {
     font-weight: bold;
     color: #555;
 }
-.filter-group select {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: white;
-    font-size: 1em;
-    min-width: 150px;
-    cursor: pointer;
-}
 
+/* --- Admin Product Card Styles --- */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -246,23 +240,19 @@ body {
     padding: 15px;
     flex-grow: 1;
 }
-
 .card-body h3 {
     margin: 0 0 10px 0;
     font-size: 1.1em;
 }
-
 .card-details p {
     margin: 4px 0;
     font-size: 0.9em;
     color: #7f8c8d;
 }
-
 .card-details p span {
     color: #2c3e50;
     font-weight: bold;
 }
-
 .card-details p span.low-stock {
     color: #e74c3c;
 }
@@ -275,7 +265,6 @@ body {
     background-color: #f9fafb;
     border-top: 1px solid #eee;
 }
-
 .status-toggle {
     display: flex;
     align-items: center;
@@ -339,23 +328,19 @@ body {
     color: #c0392b;
 }
 
+/* --- Modal Styles --- */
 .modal-container {
     display: none;
     position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    left: 0; top: 0; width: 100%; height: 100%;
     z-index: 1000;
     justify-content: center;
     align-items: center;
     background-color: rgba(0,0,0,0.6);
 }
-
 .modal-container.show {
     display: flex;
 }
-
 .modal-content {
     background-color: white;
     padding: 30px;
@@ -367,7 +352,15 @@ body {
     max-height: 85vh;
     overflow-y: auto;
 }
-
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
 .image-preview {
     max-width: 100%;
     height: auto;
@@ -384,98 +377,110 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
-
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    color: #aaa;
-    cursor: pointer;
-}
-
 .form-group {
     margin-bottom: 15px;
 }
-
 .form-group label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
 }
-
-.form-group input {
+.form-group input, .form-group select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
+    font-size: 1em;
 }
-
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+}
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+}
 .form-actions {
     margin-top: 20px;
     text-align: right;
 }
+
 /* --- Order Management Styles --- */
 .order-section {
     margin-bottom: 30px;
 }
-
+.order-section h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: #34495e;
+}
 .order-list {
     display: grid;
     gap: 20px;
+    grid-template-columns: 1fr;
 }
-
 .order-card {
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border: 1px solid #eee;
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.3s ease;
 }
-
+.order-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
 .order-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
     border-bottom: 1px solid #eee;
+    background-color: #f9fafb;
 }
-
 .order-header h3 {
     margin: 0;
-    font-size: 1.2em;
+    font-size: 1.1em;
+    color: #2c3e50;
 }
-
 .order-header .status {
     font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.9em;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    text-transform: uppercase;
 }
-
 .order-header .status.pending {
-    background-color: #f1c40f; /* สีเหลือง */
+    background-color: #f39c12;
     color: #fff;
 }
-
 .order-header .status.confirmed {
-    background-color: #27ae60; /* สีเขียว */
+    background-color: #27ae60;
     color: #fff;
 }
-
 .order-body {
     padding: 20px;
 }
-
-.order-details p {
-    margin: 0 0 10px 0;
+.order-details {
+    margin-bottom: 15px;
 }
-
+.order-details p {
+    margin: 0 0 8px 0;
+    color: #555;
+}
 .order-item-list {
     margin-top: 15px;
+    border-top: 1px dashed #ddd;
+    padding-top: 15px;
 }
-
 .order-item {
     display: flex;
     align-items: center;
@@ -495,212 +500,82 @@ body {
 .order-item-info {
     flex-grow: 1;
 }
-
-.order-actions {
-    padding: 15px 20px;
-    text-align: right;
-    background-color: #f9fafb;
-}
-/* --- Order Management Styles --- */
-.order-section {
-    margin-bottom: 30px;
-}
-
-.order-section h2 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    color: #34495e;
-}
-
-.order-list {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: 1fr; /* 1 column layout */
-}
-
-.order-card {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border: 1px solid #e0e0e0;
-    transition: box-shadow 0.3s ease;
-}
-
-.order-card:hover {
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.order-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-    background-color: #f9fafb;
-}
-
-.order-header h3 {
-    margin: 0;
-    font-size: 1.1em;
-    color: #2c3e50;
-}
-
-.order-header .status {
-    font-weight: bold;
-    padding: 5px 12px;
-    border-radius: 15px; /* ทำให้ขอบมนขึ้น */
-    font-size: 0.8em;
-    text-transform: uppercase;
-}
-
-.order-header .status.pending {
-    background-color: #f39c12; /* สีส้ม */
-    color: #fff;
-}
-
-.order-header .status.confirmed {
-    background-color: #27ae60; /* สีเขียว */
-    color: #fff;
-}
-
-.order-body {
-    padding: 20px;
-}
-
-.order-details {
-    margin-bottom: 15px;
-}
-
-.order-details p {
-    margin: 0 0 8px 0;
-    color: #555;
-}
-
-.order-item-list {
-    margin-top: 15px;
-    border-top: 1px dashed #ddd;
-    padding-top: 15px;
-}
-
-.order-item {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 8px 0;
-    font-size: 0.95em;
-}
-
-.order-item-info p {
-    margin: 0;
-}
-
 .order-actions {
     padding: 15px 20px;
     text-align: right;
     background-color: #f9fafb;
     border-top: 1px solid #eee;
 }
+
 /* --- Image Modal Styles --- */
 .image-modal-container {
-    display: none; /* ซ่อนไว้ก่อน */
+    display: none;
     position: fixed;
-    z-index: 1000; /* ให้แสดงทับทุกอย่าง */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.8); /* พื้นหลังทึบแสง */
-    align-items: center; /* จัดให้อยู่ตรงกลาง */
-    justify-content: center; /* จัดให้อยู่ตรงกลาง */
+    z-index: 2000; /* Higher z-index */
+    left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    align-items: center;
+    justify-content: center;
 }
-
 .image-modal-container.show {
-    display: flex; /* แสดงเมื่อมี class 'show' */
+    display: flex;
 }
-
 .image-modal-content {
     position: relative;
-    background-color: #fefefe;
-    margin: auto;
     padding: 0;
     border-radius: 8px;
     max-width: 90%;
     max-height: 90%;
-    display: flex; /* เพื่อจัดรูปภาพให้อยู่ตรงกลางใน content */
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
-
 .image-modal-content img {
     max-width: 100%;
     max-height: 100%;
-    display: block; /* ลบช่องว่างใต้รูปภาพ */
     border-radius: 8px;
 }
-
 .image-modal-close-button {
     position: absolute;
-    top: 10px;
-    right: 25px;
+    top: -15px;
+    right: -15px;
     color: #fff;
-    font-size: 35px;
-    font-weight: bold;
+    font-size: 25px;
     cursor: pointer;
-    transition: 0.3s;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.7);
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.image-modal-close-button:hover,
-.image-modal-close-button:focus {
-    color: #bbb;
-    text-decoration: none;
-    cursor: pointer;
-}
 /* --- Out of Stock Overlay --- */
-.card-image-container {
-    position: relative; /* สำคัญมากสำหรับ Overlay */
-}
-
 .out-of-stock-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.7); /* พื้นหลังสีขาวโปร่งแสง */
+    background-color: rgba(255, 255, 255, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none; /* ทำให้คลิกทะลุได้ */
+    pointer-events: none;
 }
-
 .out-of-stock-overlay span {
-    color: #c0392b; /* สีแดงเข้ม */
+    color: #c0392b;
     font-size: 1.5em;
     font-weight: bold;
     text-transform: uppercase;
-    transform: rotate(-15deg); /* เอียงตัวอักษรเล็กน้อย */
+    transform: rotate(-15deg);
     border: 3px solid #c0392b;
     padding: 5px 15px;
     border-radius: 5px;
 }
+
 /* --- Notification Badge Styles --- */
 .menu-orders {
-    position: relative; /* ทำให้ badge อ้างอิงตำแหน่งได้ */
+    position: relative;
 }
-
 .notification-badge {
     position: absolute;
     top: 10px;
@@ -718,70 +593,93 @@ body {
     border: 2px solid #2c3e50;
     transition: transform 0.3s ease;
 }
-
-/* ซ่อน badge เมื่อไม่มีออเดอร์ */
 .notification-badge.hidden {
     transform: scale(0);
 }
-
-/* สไตล์ตอนที่ sidebar พับเก็บ */
 .sidebar.collapsed .notification-badge {
     top: 5px;
     right: 5px;
 }
- /* --- User Management Page Styles --- */
+
+/* --- User Management Page Styles --- */
 .user-management-grid {
     display: grid;
-    grid-template-columns: 1fr 2fr; /* 2 columns: form | table */
+    grid-template-columns: 350px 1fr;
     gap: 30px;
     align-items: start;
 }
-
 .form-container, .table-container {
     background-color: white;
-    padding: 25px;
+    padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
 }
-
+.form-container h3, .table-container h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.2em;
+    color: #34495e;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 15px;
+}
 .table-container table {
     width: 100%;
     border-collapse: collapse;
 }
-
 .table-container th, .table-container td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
     text-align: left;
+    vertical-align: middle;
 }
 .table-container thead th {
-    background-color: #f4f6f8;
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #495057;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    letter-spacing: 0.5px;
 }
-/* --- Custom Select (Dropdown) Styles for Role --- */
-.form-group select {
-    appearance: none; /* ลบหน้าตาเริ่มต้นของ browser */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: white;
-    font-size: 1em;
-    color: #333;
-    cursor: pointer;
-
-    /* เพิ่มลูกศร (arrow) แบบกำหนดเอง */
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 16px 12px;
+.table-container tbody tr:hover {
+    background-color: #f8f9fa;
+}
+.table-container td:nth-child(3) {
+    font-weight: bold;
+    text-transform: capitalize;
+}
+.table-container .action-icons a {
+    color: #7f8c8d;
+    margin: 0 5px;
+    font-size: 1.2em;
+    transition: color 0.2s;
+}
+.table-container .action-icons a.edit-user:hover {
+    color: #3498db;
+}
+.table-container .action-icons a.delete-user:hover {
+    color: #e74c3c;
 }
 
-/* เอฟเฟกต์เมื่อ focus */
-.form-group select:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+/* --- Responsive Styles for Admin Pages --- */
+@media (max-width: 992px) {
+    .user-management-grid {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 768px) {
+    .sidebar.collapsed { width: 0; }
+    .content-wrapper.full-width { margin-left: 0; }
+    .sidebar.collapsed + .content-wrapper .sidebar-toggle { left: 15px; }
+    .main-content { padding: 15px; }
+    .main-content header { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .main-content header h1 { font-size: 1.8em; }
+    .page-controls { flex-direction: column; align-items: stretch; }
+    .search-bar input { width: 100%; box-sizing: border-box; }
+    .filter-actions { justify-content: space-between; }
+    .action-button { padding: 8px 12px; font-size: 0.9em; }
+    .product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+    .card-body h3 { font-size: 1em; }
+    .card-details p { font-size: 0.8em; }
+    .card-footer { flex-direction: column; align-items: flex-start; gap: 10px; }
 }

@@ -200,3 +200,22 @@ header p {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
 }
+/* --- Responsive Styles for Mobile --- */
+@media (max-width: 768px) {
+    /* ลดขนาดหัวข้อหลักบนจอมือถือ */
+    header h1 {
+        font-size: 2.5em;
+    }
+
+    /* ทำให้ปุ่มเรียงต่อกันในแนวตั้ง */
+    .navigation-buttons {
+        flex-direction: column;
+        align-items: center; /* จัดปุ่มให้อยู่กลาง */
+        gap: 15px; /* ลดระยะห่าง */
+    }
+
+    .nav-button {
+        width: 80%; /* กำหนดความกว้างให้ปุ่ม */
+        justify-content: center; /* จัดเนื้อหาในปุ่มให้อยู่กลาง */
+    }
+}

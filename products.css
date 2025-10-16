@@ -56,3 +56,18 @@ body{font-family:Arial,sans-serif;background-color:#f4f6f8;margin:0;padding:0;co
     padding: 5px 15px;
     border-radius: 5px;
 }
+/* --- Responsive Styles for Sale Page --- */
+@media (max-width: 768px) {
+    .main {
+        padding: 15px;
+    }
+    
+    /* ทำให้ช่องค้นหากินพื้นที่น้อยลงและอยู่กลาง */
+    .search-bar {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    .search-bar input {
+        padding: 10px;
+    }
+}

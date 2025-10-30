@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let products = [];
     let cart = [];
 
+    // --- DOM Elements ---
+    const API_BASE_URL = 'https://softstep-backend.onrender.com/api'; // ⚠️ ตรวจสอบ URL นี้ให้ตรงกับ External URL ของ Render
     const productGrid = document.getElementById('product-grid');
     const searchInput = document.getElementById('sale-search-input');
     const cartCountElement = document.getElementById('cart-count');
@@ -13,23 +15,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModalButtons = document.querySelectorAll('.modal-container .close-button');
     const modalOverlays = document.querySelectorAll('.modal-container .modal-overlay');
 
+    // --- 1. โหลดข้อมูลสินค้า ---
     async function loadProducts() {
         try {
-            const response = await fetch('https://softstep-web.onrender.com/api/products');
+            // ดึงข้อมูลจาก Backend ที่รันบน Render
+            const response = await fetch(`${API_BASE_URL}/products`);
             if (!response.ok) throw new Error('Could not fetch products');
             products = await response.json();
+            
+            // เรียกใช้ฟังก์ชันกรองและแสดงผล
             applyFiltersAndDisplay();
         } catch (error) {
             console.error("Could not load products:", error);
-            productGrid.innerHTML = '<p style="color: red; text-align: center;">Failed to load products. Please ensure the backend server is running.</p>';
+            productGrid.innerHTML = '<p style="color: red; text-align: center;">Failed to load products. Please ensure the backend server is running and the API URL is correct.</p>';
         }
     }
 
+    // --- 2. กรองและแสดงผล ---
     function applyFiltersAndDisplay() {
         const searchTerm = searchInput.value.toLowerCase();
         
         const filteredProducts = products.filter(product => {
-            if (!product.isActive) return false;
+            // 🐛 แก้ไข: PostgreSQL ส่งค่าเป็น 'isactive' (ตัวเล็ก)
+            // เราต้องกรองเฉพาะสินค้าที่มี 'isactive' เป็น true (สำหรับ PostgreSQL)
+            if (product.isactive !== true) return false; 
+            
             if (searchTerm === '') return true;
             return (
                 product.name.toLowerCase().includes(searchTerm) ||
@@ -41,14 +51,23 @@ document.addEventListener('DOMContentLoaded', () => {
         displayProducts(filteredProducts);
     }
 
+    // --- 3. สร้าง Card สินค้า ---
     function displayProducts(productList) {
         productGrid.innerHTML = '';
+        if (productList.length === 0) {
+            productGrid.innerHTML = '<p style="text-align: center;">No active products found.</p>';
+            return;
+        }
+
         productList.forEach(product => {
             const card = document.createElement('div');
             card.className = 'product-card';
+            // ⚠️ ปรับปรุง: URL รูปภาพใช้ API_BASE_URL เพื่อความแม่นยำ
+            const imageUrl = `${API_BASE_URL.replace('/api', '')}/${product.image}`;
+            
             card.innerHTML = `
                 <div class="card-image-container">
-                    <img src="https://softstep-web.onrender.com/${product.image}" alt="${product.name}">
+                    <img src="${imageUrl}" alt="${product.name}">
                     ${product.stock <= 0 ? '<div class="out-of-stock-overlay"><span>สินค้าหมด</span></div>' : ''}
                 </div>
                 <div class="card-info">
@@ -66,6 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         addEventListeners();
     }
+
+    // --- 4. การทำงานของตะกร้าและอื่นๆ (โค้ดเดิม) ---
+    // ... (ส่วน updateCartCount, displayCartItems, addEventListeners, Modal Handlers เหมือนเดิม) ...
 
     function addEventListeners() {
         document.querySelectorAll('.product-card').forEach(card => {
@@ -110,9 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
         cart.forEach(item => {
             const productInfo = products.find(p => p.id === item.id);
             if (productInfo) {
+                // ⚠️ ปรับปรุง: URL รูปภาพใช้ API_BASE_URL เพื่อความแม่นยำ
+                const imageUrl = `${API_BASE_URL.replace('/api', '')}/${productInfo.image}`;
                 const itemElement = document.createElement('div');
                 itemElement.className = 'cart-item';
-                itemElement.innerHTML = `<img src="https://softstep-web.onrender.com/${productInfo.image}" alt="${productInfo.name}"><div class="cart-item-info"><h4>${productInfo.name}</h4><p>Qty: ${item.quantity} | Price: ${item.price.toFixed(2)}</p></div>`;
+                itemElement.innerHTML = `<img src="${imageUrl}" alt="${productInfo.name}"><div class="cart-item-info"><h4>${productInfo.name}</h4><p>Qty: ${item.quantity} | Price: ${item.price.toFixed(2)}</p></div>`;
                 cartItemsContainer.appendChild(itemElement);
             }
         });
@@ -129,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
-            const response = await fetch('https://softstep-web.onrender.com/api/orders', {
+            const response = await fetch(`${API_BASE_URL}/orders`, { // ⚠️ ใช้ API_BASE_URL
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cart),
@@ -148,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     closeModalButtons.forEach(btn => btn.addEventListener('click', () => btn.closest('.modal-container').classList.remove('show')));
     modalOverlays.forEach(overlay => overlay.addEventListener('click', () => overlay.closest('.modal-container').classList.remove('show')));
-
     searchInput.addEventListener('input', applyFiltersAndDisplay);
 
     loadProducts();
